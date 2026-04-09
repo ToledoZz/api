@@ -116,4 +116,10 @@ public class SinpeController {
     public Long cantidadNoSincronizados(){
         return service.cantidadNoSincronizados();
     }
+    
+    // GET /api/sinpes/ping
+@GetMapping("/ping")
+public String ping() {
+    return "OK"; // Devuelve un simple OK
+}
 }
