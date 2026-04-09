@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Caja;
 import com.example.demo.repository.CajaRepository;
+import java.util.Optional;
 
 @Service
 public class CajaService {
@@ -24,4 +25,8 @@ public class CajaService {
     public void eliminar(Integer id){
         repository.deleteById(id);
     }
+    
+    public Optional<Caja> obtenerPorId(Integer id){
+    return repository.findById(id);
+}
 }
