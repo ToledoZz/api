@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,29 +16,67 @@ public class SinpeService {
     @Autowired
     private SinpeRepository repository;
 
-    // CRUD
+    @Autowired
+    private BitacoraService bitacora;
+
+    // =========================
+    // CRUD + BITACORA
+    // =========================
     public List<Sinpe> listar(){
         return repository.findAll();
     }
 
     public Sinpe guardar(Sinpe sinpe){
-        return repository.save(sinpe);
+        Sinpe anterior = null;
+        String tipo = (sinpe.getIdSinpe() == null) ? "Registrar" : "Editar";
+        
+        try {
+            if (sinpe.getIdSinpe() != null) {
+                anterior = repository.findById(sinpe.getIdSinpe()).orElse(null);
+            }
+            Sinpe guardado = repository.save(sinpe);
+            bitacora.registrarEvento("SINPE", tipo, "Transacción procesada", anterior, guardado, null);
+            return guardado;
+        } catch (Exception e) {
+            bitacora.registrarEvento("SINPE", "Error", "Fallo al guardar", anterior, sinpe, e);
+            throw e;
+        }
     }
 
     public void eliminar(Integer id){
-        repository.deleteById(id);
+        Sinpe anterior = repository.findById(id).orElse(null);
+        try {
+            repository.deleteById(id);
+            bitacora.registrarEvento("SINPE", "Eliminar", "ID: " + id, anterior, null, null);
+        } catch (Exception e) {
+            bitacora.registrarEvento("SINPE", "Error", "Fallo al eliminar", anterior, null, e);
+            throw e;
+        }
     }
 
-    // 🔥 SINCRONIZAR
+    // 🔥 SINCRONIZAR + BITACORA
     public Sinpe sincronizar(Integer id){
-        Sinpe sinpe = repository.findById(id)
+        Sinpe anterior = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("Sinpe no encontrado"));
 
-        sinpe.setEstado(true);
-
-        return repository.save(sinpe);
+        try {
+            // Creamos una copia para el registro antes de modificar
+            Sinpe sinpe = repository.findById(id).get();
+            sinpe.setEstado(true);
+            Sinpe resultado = repository.save(sinpe);
+            
+            bitacora.registrarEvento("SINPE", "Editar", "Sincronización exitosa", anterior, resultado, null);
+            return resultado;
+        } catch (Exception e) {
+            bitacora.registrarEvento("SINPE", "Error", "Fallo en sincronización", anterior, null, e);
+            throw e;
+        }
     }
 
+    // =========================
+    // CONSULTAS ORIGINALES (SIN CAMBIOS)
+    // =========================
+    
     // 🔥 NO SINCRONIZADOS
     public List<Sinpe> noSincronizados(){
         return repository.findByEstado(false);
