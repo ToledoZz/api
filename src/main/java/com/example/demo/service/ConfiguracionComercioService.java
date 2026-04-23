@@ -40,7 +40,7 @@ public class ConfiguracionComercioService {
     public ConfiguracionComercio editar(Integer id, ConfiguracionComercio config) {
         ConfiguracionComercio actual = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Configuración no encontrada"));
-        ConfiguracionComercio copiaAnterior = actual; // Jackson capturará el estado actual
+        ConfiguracionComercio copiaAnterior = actual; 
 
         try {
             actual.setTipoConfiguracion(config.getTipoConfiguracion());

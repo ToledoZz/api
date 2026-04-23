@@ -19,9 +19,7 @@ public class SinpeService {
     @Autowired
     private BitacoraService bitacora;
 
-    // =========================
-    // CRUD + BITACORA
-    // =========================
+    
     public List<Sinpe> listar(){
         return repository.findAll();
     }
@@ -54,13 +52,13 @@ public class SinpeService {
         }
     }
 
-    // 🔥 SINCRONIZAR + BITACORA
+  
     public Sinpe sincronizar(Integer id){
         Sinpe anterior = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("Sinpe no encontrado"));
 
         try {
-            // Creamos una copia para el registro antes de modificar
+            
             Sinpe sinpe = repository.findById(id).get();
             sinpe.setEstado(true);
             Sinpe resultado = repository.save(sinpe);
@@ -73,33 +71,29 @@ public class SinpeService {
         }
     }
 
-    // =========================
-    // CONSULTAS ORIGINALES (SIN CAMBIOS)
-    // =========================
     
-    // 🔥 NO SINCRONIZADOS
     public List<Sinpe> noSincronizados(){
         return repository.findByEstado(false);
     }
 
-    // 🔥 FILTRO POR FECHA
+    
     public List<Sinpe> porFecha(Date inicio, Date fin){
         return repository.findByFechaDeRegistroBetween(inicio, fin);
     }
 
-    // 🔥 POR COMERCIO
+    
     public List<Sinpe> porComercio(Integer idComercio){
         return repository.findByCaja_Comercio_IdComercio(idComercio);
     }
 
-    // 🔥 POR COMERCIO Y FECHA
+    
     public List<Sinpe> porComercioYFecha(Integer idComercio, Date inicio, Date fin){
         return repository.findByCaja_Comercio_IdComercioAndFechaDeRegistroBetween(
             idComercio, inicio, fin
         );
     }
 
-    // 🔥 TOTAL GENERAL
+    
     public Double totalGeneral(){
         return repository.findAll()
             .stream()
@@ -107,7 +101,7 @@ public class SinpeService {
             .sum();
     }
 
-    // 🔥 TOTAL POR COMERCIO
+    
     public Double totalPorComercio(Integer idComercio){
         return porComercio(idComercio)
             .stream()
@@ -115,7 +109,7 @@ public class SinpeService {
             .sum();
     }
 
-    // 🔥 TOTAL POR FECHA
+    
     public Double totalPorFecha(Date inicio, Date fin){
         return porFecha(inicio, fin)
             .stream()
@@ -123,7 +117,7 @@ public class SinpeService {
             .sum();
     }
 
-    // 🔥 TOTAL POR COMERCIO Y FECHA
+    
     public Double totalPorComercioYFecha(Integer idComercio, Date inicio, Date fin){
         return porComercioYFecha(idComercio, inicio, fin)
             .stream()
@@ -131,17 +125,17 @@ public class SinpeService {
             .sum();
     }
 
-    // 🔥 CANTIDAD TOTAL
+   
     public Long cantidadTotal(){
         return repository.count();
     }
 
-    // 🔥 CANTIDAD POR COMERCIO
+    
     public Long cantidadPorComercio(Integer idComercio){
         return (long) porComercio(idComercio).size();
     }
 
-    // 🔥 CANTIDAD NO SINCRONIZADOS
+    
     public Long cantidadNoSincronizados(){
         return repository.findByEstado(false).stream().count();
     }
