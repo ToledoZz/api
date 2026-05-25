@@ -42,29 +42,34 @@ public class StudentController {
     // =========================
 
     @PostMapping("/start-registration")
-    public String startRegistration(
-            @RequestParam String name,
-            @RequestParam String email
-    ) {
+public String startRegistration(
+        @RequestParam String name,
+        @RequestParam String email
+) {
 
-        try {
+    try {
 
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "python",
-                    "C:/Users/cerda/smartattendance/ai-service/register_student.py",
-                    name,
-                    email
-            );
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                "cmd.exe",
+                "/c",
+                "start",
+                "cmd.exe",
+                "/k",
+                "python C:/Users/cerda/smartattendance/ai-service/register_student.py \"" 
+                + name + "\" \"" + email + "\""
+        );
 
-            processBuilder.start();
+        processBuilder.start();
 
-            return "Camera opened";
+        return "Camera opened";
 
-        } catch (Exception e) {
+    } catch (Exception e) {
 
-            return e.getMessage();
-        }
+        e.printStackTrace();
+
+        return e.getMessage();
     }
+}
 
     // =========================
     // DELETE
