@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Base64;
+import java.util.Map;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 
@@ -66,6 +69,54 @@ public String startRegistration(
     } catch (Exception e) {
 
         e.printStackTrace();
+
+        return e.getMessage();
+    }
+}
+
+@PostMapping("/upload-face")
+public String uploadFace(
+        @RequestBody Map<String, String> body
+) {
+
+    try {
+
+        String fullName = body.get("fullName");
+
+        String image = body.get("image");
+
+        // quitar encabezado base64
+        image = image.replace(
+            "data:image/jpeg;base64,",
+            ""
+        );
+
+        byte[] imageBytes = Base64.getDecoder().decode(image);
+
+        File folder = new File(
+            "dataset/" + fullName
+        );
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        int count = folder.listFiles().length;
+
+        File file = new File(
+            folder,
+            count + ".jpg"
+        );
+
+        FileOutputStream fos = new FileOutputStream(file);
+
+        fos.write(imageBytes);
+
+        fos.close();
+
+        return "Saved";
+
+    } catch (Exception e) {
 
         return e.getMessage();
     }
