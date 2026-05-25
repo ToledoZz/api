@@ -16,10 +16,18 @@ public class StudentController {
     @Autowired
     private StudentService service;
 
+    // =========================
+    // GET ALL
+    // =========================
+
     @GetMapping
     public List<Student> listar() {
         return service.listar();
     }
+
+    // =========================
+    // SAVE STUDENT
+    // =========================
 
     @PostMapping
     public Student guardar(@RequestBody Student student) {
@@ -28,6 +36,39 @@ public class StudentController {
 
         return service.guardar(student);
     }
+
+    // =========================
+    // START FACE REGISTRATION
+    // =========================
+
+    @PostMapping("/start-registration")
+    public String startRegistration(
+            @RequestParam String name,
+            @RequestParam String email
+    ) {
+
+        try {
+
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "python",
+                    "C:/Users/cerda/smartattendance/ai-service/register_student.py",
+                    name,
+                    email
+            );
+
+            processBuilder.start();
+
+            return "Camera opened";
+
+        } catch (Exception e) {
+
+            return e.getMessage();
+        }
+    }
+
+    // =========================
+    // DELETE
+    // =========================
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Integer id) {
