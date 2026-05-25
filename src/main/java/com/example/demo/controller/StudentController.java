@@ -1,48 +1,36 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Student;
-import com.example.demo.repository.StudentRepository;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.model.Student;
+import com.example.demo.service.StudentService;
+
 @RestController
-@RequestMapping("/students")
-@CrossOrigin("*")
+@RequestMapping("/api/students")
+@CrossOrigin
 public class StudentController {
 
-    private final StudentRepository repository;
+    @Autowired
+    private StudentService service;
 
-    public StudentController(StudentRepository repository) {
-        this.repository = repository;
+    @GetMapping
+    public List<Student> listar() {
+        return service.listar();
     }
-    
-    @PostMapping("/start-registration")
-public String startRegistration(
-        @RequestParam String name,
-        @RequestParam String email
-) {
-
-    try {
-
-        ProcessBuilder processBuilder = new ProcessBuilder(
-                "python",
-                "C:/Users/cerda/smartattendance/ai-service/register_student.py",
-                name,
-                email
-        );
-
-        processBuilder.start();
-
-        return "Face registration started";
-
-    } catch (Exception e) {
-
-        return e.getMessage();
-    }
-}
 
     @PostMapping
-    public Student save(@RequestBody Student student) {
-        return repository.save(student);
+    public Student guardar(@RequestBody Student student) {
+
+        student.setId(null);
+
+        return service.guardar(student);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Integer id) {
+        service.eliminar(id);
     }
 }

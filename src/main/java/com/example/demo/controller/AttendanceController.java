@@ -1,34 +1,28 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Attendance;
-import com.example.demo.repository.AttendanceRepository;
-
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.model.Attendance;
+import com.example.demo.service.AttendanceService;
+
 @RestController
-@RequestMapping("/attendance")
-@CrossOrigin("*")
+@RequestMapping("/api/attendance")
+@CrossOrigin
 public class AttendanceController {
 
-    private final AttendanceRepository repository;
-
-    public AttendanceController(AttendanceRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private AttendanceService service;
 
     @GetMapping
-    public List<Attendance> getAll() {
-        return repository.findAll();
+    public List<Attendance> listar() {
+        return service.listar();
     }
 
     @PostMapping
-    public Attendance save(@RequestBody Attendance attendance) {
-
-        attendance.setDetectedAt(LocalDateTime.now());
-
-        return repository.save(attendance);
+    public Attendance guardar(@RequestBody Attendance attendance) {
+        return service.guardar(attendance);
     }
 }

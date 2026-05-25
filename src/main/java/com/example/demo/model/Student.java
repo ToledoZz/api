@@ -3,29 +3,28 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "student")
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
+    @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "dataset_path")
     private String datasetPath;
 
-    public Student() {
-    }
-
-    public Student(String fullName, String email, String datasetPath) {
-        this.fullName = fullName;
-        this.email = email;
-        this.datasetPath = datasetPath;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFullName() {

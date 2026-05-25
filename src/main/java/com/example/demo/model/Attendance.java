@@ -1,29 +1,29 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "attendance")
 public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
+    @Column(name = "student_name")
     private String studentName;
 
+    @Column(name = "detected_at")
     private LocalDateTime detectedAt;
 
-    public Attendance() {
-    }
-
-    public Attendance(String studentName, LocalDateTime detectedAt) {
-        this.studentName = studentName;
-        this.detectedAt = detectedAt;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getStudentName() {
