@@ -30,6 +30,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
 
         <!-- JPA -->
         <dependency>
@@ -75,6 +81,12 @@
             <groupId>com.guicedee.services</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>1.2.2.1-jre17</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary</artifactId>
+            <version>1.0.14</version>
             <type>jar</type>
         </dependency>
     </dependencies>
